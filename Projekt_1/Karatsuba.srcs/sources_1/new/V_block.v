@@ -9,37 +9,35 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 
-module V_block#( parameter IN_WIDTH  = 16,
+module V_block#( parameter IN_WIDTH  = 32,
                  parameter OUT_WIDTH = 64
               )( 
                  input                  clk,
                  input                  rst,
-                 input  [ IN_WIDTH-1:0] ABH,
-                 input  [ IN_WIDTH-1:0] ABL,
-                 input  [ IN_WIDTH-1:0] BBH,
-                 input  [ IN_WIDTH-1:0] BBL,
+                 input  [IN_WIDTH-1:0]  A,
+                 input  [IN_WIDTH-1:0]  B,
                  output [OUT_WIDTH-1:0] AtB
                 );
 
-reg  [  IN_WIDTH-1:0] ABH_r;
-reg  [  IN_WIDTH-1:0] ABL_r;
-reg  [  IN_WIDTH-1:0] BBH_r;
-reg  [  IN_WIDTH-1:0] BBL_r;
-wire [  IN_WIDTH:0] A_sum;
-wire [  IN_WIDTH:0] B_sum;
-wire [2*IN_WIDTH-1:0] U;
-wire [2*IN_WIDTH-1:0] V;
-wire [2*IN_WIDTH+1:0] W_temp;
-reg  [2*IN_WIDTH-1:0] W;
-reg  [2*IN_WIDTH-1:0] Z; 
+reg  [IN_WIDTH/2-1:0] ABH_r;
+reg  [IN_WIDTH/2-1:0] ABL_r;
+reg  [IN_WIDTH/2-1:0] BBH_r;
+reg  [IN_WIDTH/2-1:0] BBL_r;
+wire [  IN_WIDTH/2:0] A_sum;
+wire [  IN_WIDTH/2:0] B_sum;
+wire [  IN_WIDTH-1:0] U;
+wire [  IN_WIDTH-1:0] V;
+wire [  IN_WIDTH+1:0] W_temp;
+reg  [  IN_WIDTH-1:0] W;
+reg  [  IN_WIDTH-1:0] Z; 
 wire [ OUT_WIDTH-1:0] res_test;
 
 always@(posedge clk)
 begin
-  ABH_r <= ABH;
-  ABL_r <= ABL;
-  BBH_r <= BBH;
-  BBL_r <= BBL;
+  ABH_r <= A[IN_WIDTH-1:IN_WIDTH/2];
+  ABL_r <= A[       IN_WIDTH/2-1:0];
+  BBH_r <= B[IN_WIDTH-1:IN_WIDTH/2];
+  BBL_r <= B[       IN_WIDTH/2-1:0];
 end
  
 assign A_sum = ABH_r + ABL_r;    

@@ -25,12 +25,12 @@ reg  [  IN_WIDTH/2:0] BH_r;
 reg  [  IN_WIDTH/2:0] BL_r;               
 wire [IN_WIDTH/2+1:0] A_sum;
 wire [IN_WIDTH/2+1:0] B_sum;
-wire [IN_WIDTH-1:0] U;
-wire [IN_WIDTH-1:0] V;
-wire [IN_WIDTH+1:0] W_temp;
-reg  [IN_WIDTH-1:0] W;
-reg  [IN_WIDTH-1:0] Z;
-wire [IN_WIDTH-1:0] Z_abs;
+wire [  IN_WIDTH-1:0] U;
+wire [  IN_WIDTH-1:0] V;
+wire [  IN_WIDTH+1:0] W_temp;
+reg  [  IN_WIDTH-1:0] W;
+reg  [  IN_WIDTH-1:0] Z;
+wire [  IN_WIDTH-1:0] Z_abs;
 wire [ OUT_WIDTH-1:0] mult_result;
 
 always@(posedge clk)
@@ -44,22 +44,22 @@ end
 assign A_sum = AH_r + AL_r;
 assign B_sum = BH_r + BL_r;
 
-mult_17b mult_U_i (.clk(clk  ),
+mult_17b mult_U_i (.clk(clk ),
                    .A  (AH_r),
                    .B  (BH_r),
-                   .P  (U    )
+                   .P  (U   )
                   );
 
-mult_17b mult_V_i (.clk(clk  ),
+mult_17b mult_V_i (.clk(clk ),
                    .A  (AL_r),
                    .B  (BL_r),
-                   .P  (V    )
+                   .P  (V   )
                   );
 
-mult_18b mult_W_i (.clk(clk      ),
-                   .A  (A_sum    ),
-                   .B  (B_sum    ),
-                   .P  (W_temp   )
+mult_18b mult_W_i (.clk(clk   ),
+                   .A  (A_sum ),
+                   .B  (B_sum ),
+                   .P  (W_temp)
                   );
 
 always@*
@@ -67,6 +67,6 @@ begin
   Z = W_temp - U - V;
 end
 
-assign result = (U<<34) + (Z<<17) + V; // prawdopodobnie trzeba bedzie shift zwiekszyc bo mamy na wejsciu 17 bitowe wartosci
+assign result = (U<<34) + (Z<<17) + V;
 
 endmodule

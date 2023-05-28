@@ -99,31 +99,23 @@ assign BL_sum = B_sum[16:0];
 // A_H * B_H
 U_block u_i ( .clk(clk),
               .rst(rst),
-              .AAH(AAH),
-              .AAL(AAL),
-              .BAH(BAH),
-              .BAL(BAL),
-              .AtB(U  )      );
+              .A  (AH ),
+              .B  (BH ),
+              .AtB(U  )  );
               
 // A_L * B_L
 V_block v_i ( .clk(clk),
               .rst(rst),
-              .ABH(ABH),
-              .ABL(ABL),
-              .BBH(BBH),
-              .BBL(BBL),
-              .AtB(V  )      );
+              .A  (AL ),
+              .B  (BL ),
+              .AtB(V  )   );
 
 //(A_H + A_L) * (B_H + B_L)
-W_block w_i ( .clk(clk       ),
-              .rst(rst       ),
-              //.AH(AH_sum     ),
-              //.AL(AL_sum     ),
-              //.BH(BH_sum     ),
-              //.BL(BL_sum     ),
-              .A(A_sum),
-              .B(B_sum),
-              .result(W_temp )    );
+W_block w_i ( .clk   (clk   ),
+              .rst   (rst   ),
+              .A     (A_sum ),
+              .B     (B_sum ),
+              .result(W_temp) );
       
 always@*
 begin
