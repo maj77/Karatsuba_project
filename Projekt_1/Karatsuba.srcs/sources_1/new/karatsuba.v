@@ -117,10 +117,12 @@ V_block v_i ( .clk(clk),
 //(A_H + A_L) * (B_H + B_L)
 W_block w_i ( .clk(clk       ),
               .rst(rst       ),
-              .AH(AH_sum     ),
-              .AL(AL_sum     ),
-              .BH(BH_sum     ),
-              .BL(BL_sum     ),
+              //.AH(AH_sum     ),
+              //.AL(AL_sum     ),
+              //.BH(BH_sum     ),
+              //.BL(BL_sum     ),
+              .A(A_sum),
+              .B(B_sum),
               .result(W_temp )    );
       
 always@*

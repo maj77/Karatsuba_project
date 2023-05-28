@@ -33,12 +33,6 @@ reg  [63:0]  test_array[15:0];
 reg  [31:0]  A_test, B_test;
 wire [63:0]  V_test;
 
-wire [31:0] wb_a, wb_b, vb_a, vb_b, ub_a, ub_b;
-wire [63:0] wb_res, vb_res, ub_res;
-
-`define TV_FILE_PATH D:\Studia_EiT\magisterskie\Semestr_I\Systemy_dedykowane_w_ukladach_programowalnych\Projekt_1\
-
-
 karatsuba karatsuba_i ( .clk(clk   ),
                         .rst(rst   ),
                         .A_i(A     ),
@@ -47,7 +41,9 @@ karatsuba karatsuba_i ( .clk(clk   ),
 // +--------------------------------------------+
 // |                 sandbox                    |
 // +--------------------------------------------+
-
+/*
+wire [31:0] wb_a, wb_b, vb_a, vb_b, ub_a, ub_b;
+wire [63:0] wb_res, vb_res, ub_res;
 // A_H * B_H
 assign ub_a = 32'h113018e2;
 assign ub_b = 32'hc024d702;
@@ -61,16 +57,7 @@ assign wb_b = 32'hf0c26c41 + 32'h7c74b1bf; // B_H + B_L
 assign wb_res = wb_a * wb_b;
 assign vb_res = vb_a * vb_b;
 assign ub_res = ub_a * ub_b;
-
-//assign  aa_tb = 32'hF0C218E2;
-//assign  bb_tb = 32'h7C74B1BF;
-//
-//
-//assign u_tb    = aa_tb[31:16] * bb_tb[31:16];
-//assign v_tb    = aa_tb[15:0] * bb_tb[15:0];
-//assign w_tb    = (aa_tb[15:0] - aa_tb[31:16]) * (bb_tb[15:0] - bb_tb[31:16]);
-//assign z_tb    = u_tb + v_tb - w_tb;
-//assign vres_tb = (u_tb<<32) + (z_tb<<16) + v_tb;   
+*/
                        
 // +--------------------------------------------+
 // |                 CLOCKS                     |
@@ -125,8 +112,6 @@ begin
     #20
     A <= test_array[i];
     B <= test_array[i+1];
-    //A_test <= 32'hf0c218e2;
-    //B_test <= 32'h7c74b1bf;
   end
 end
 
@@ -150,6 +135,7 @@ end
 integer incorrect_results = 0;
 integer correct_results = 0;
 
+// TODO: add saving logs to file
 always@(posedge res_check_clk)
 begin
     $strobe("----------------------------------------------------------------------");
