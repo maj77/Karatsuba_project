@@ -9,39 +9,37 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module U_block#( parameter IN_WIDTH  = 16,
+module U_block#( parameter IN_WIDTH  = 32,
                  parameter OUT_WIDTH = 64
               )( 
                  input                  clk,
                  input                  rst,
-                 input  [IN_WIDTH-1:0]  AAH,
-                 input  [IN_WIDTH-1:0]  AAL,
-                 input  [IN_WIDTH-1:0]  BAH,
-                 input  [IN_WIDTH-1:0]  BAL,
+                 input  [ IN_WIDTH-1:0] A,
+                 input  [ IN_WIDTH-1:0] B,
                  output [OUT_WIDTH-1:0] AtB 
                );
                   
-reg  [  IN_WIDTH-1:0] AAH_r;
-reg  [  IN_WIDTH-1:0] AAL_r;
-reg  [  IN_WIDTH-1:0] BAH_r;
-reg  [  IN_WIDTH-1:0] BAL_r;
-wire [    IN_WIDTH:0] A_sum;
-wire [    IN_WIDTH:0] B_sum;
-wire [2*IN_WIDTH-1:0] U;
-wire [2*IN_WIDTH-1:0] V;
-wire [2*IN_WIDTH+1:0] W_temp;
-reg  [2*IN_WIDTH-1:0] W;
-reg  [2*IN_WIDTH-1:0] Z;
-wire [2*IN_WIDTH-1:0] Z_abs;
+reg  [IN_WIDTH/2-1:0] AAH_r;
+reg  [IN_WIDTH/2-1:0] AAL_r;
+reg  [IN_WIDTH/2-1:0] BAH_r;
+reg  [IN_WIDTH/2-1:0] BAL_r;
+wire [  IN_WIDTH/2:0] A_sum;
+wire [  IN_WIDTH/2:0] B_sum;
+wire [  IN_WIDTH-1:0] U;
+wire [  IN_WIDTH-1:0] V;
+wire [  IN_WIDTH+1:0] W_temp;
+reg  [  IN_WIDTH-1:0] W;
+reg  [  IN_WIDTH-1:0] Z;
+wire [  IN_WIDTH-1:0] Z_abs;
 wire [ OUT_WIDTH-1:0] mult_result;
 
 
 always@(posedge clk)
 begin
-  AAH_r <= AAH;
-  AAL_r <= AAL;
-  BAH_r <= BAH;
-  BAL_r <= BAL;
+  AAH_r <= A[IN_WIDTH-1:IN_WIDTH/2];
+  AAL_r <= A[       IN_WIDTH/2-1:0];
+  BAH_r <= B[IN_WIDTH-1:IN_WIDTH/2];
+  BAL_r <= B[       IN_WIDTH/2-1:0];
 end
 
 assign A_sum = AAH_r + AAL_r;
