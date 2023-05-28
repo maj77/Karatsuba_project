@@ -27,11 +27,9 @@ wire [IN_WIDTH/2+1:0] A_sum;
 wire [IN_WIDTH/2+1:0] B_sum;
 wire [  IN_WIDTH-1:0] U;
 wire [  IN_WIDTH-1:0] V;
-wire [  IN_WIDTH+1:0] W_temp;
-reg  [  IN_WIDTH-1:0] W;
+wire [  IN_WIDTH+1:0] W;
 reg  [  IN_WIDTH-1:0] Z;
-wire [  IN_WIDTH-1:0] Z_abs;
-wire [ OUT_WIDTH-1:0] mult_result;
+
 
 always@(posedge clk)
 begin
@@ -59,12 +57,12 @@ mult_17b mult_V_i (.clk(clk ),
 mult_18b mult_W_i (.clk(clk   ),
                    .A  (A_sum ),
                    .B  (B_sum ),
-                   .P  (W_temp)
+                   .P  (W     )
                   );
 
 always@*
 begin
-  Z = W_temp - U - V;
+  Z = W - U - V;
 end
 
 assign result = (U<<34) + (Z<<17) + V;
