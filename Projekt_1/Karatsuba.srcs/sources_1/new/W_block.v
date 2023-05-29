@@ -18,7 +18,7 @@ module W_block#( parameter IN_WIDTH  = 33, // + one padding bit which is not inc
                  input  [ IN_WIDTH-1:0] B,
                  output [OUT_WIDTH-1:0] result 
                );
-    
+
 reg  [  IN_WIDTH/2:0] AH_r;
 reg  [  IN_WIDTH/2:0] AL_r;
 reg  [  IN_WIDTH/2:0] BH_r;

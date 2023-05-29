@@ -62,10 +62,10 @@ begin
   B_r <= B_i;
 end
 
-assign AH = A_r[IN_WIDTH-1:IN_WIDTH/2]; //[63:32];
-assign AL = A_r[       IN_WIDTH/2-1:0];//[31:0];
-assign BH = B_r[IN_WIDTH-1:IN_WIDTH/2]; //[63:32];
-assign BL = B_r[       IN_WIDTH/2-1:0];//[31:0];
+assign AH = A_r[IN_WIDTH-1:IN_WIDTH/2];
+assign AL = A_r[       IN_WIDTH/2-1:0];
+assign BH = B_r[IN_WIDTH-1:IN_WIDTH/2];
+assign BL = B_r[       IN_WIDTH/2-1:0];
 
 assign A_sum = AH + AL;
 assign B_sum = BH + BL;
