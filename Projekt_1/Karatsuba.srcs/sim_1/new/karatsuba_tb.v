@@ -21,6 +21,7 @@
 
 
 module karatsuba_tb();
+localparam TESTS_COUNT = 50;
 
 reg          clk;
 reg          res_check_clk;
@@ -29,7 +30,7 @@ reg  [63:0]  A, A_tb;
 reg  [63:0]  B, B_tb;
 wire [127:0] result;
 reg  [127:0] result_check, result_check_buf;
-reg  [63:0]  test_array[15:0];
+reg  [63:0]  test_array[2*TESTS_COUNT-1:0];
 reg  [31:0]  A_test, B_test;
 wire [63:0]  V_test;
 
@@ -108,11 +109,12 @@ initial
 integer i;
 initial
 begin
-  for(i=0; i<16; i=i+2) begin
+  for(i=0; i<TESTS_COUNT; i=i+2) begin
     #20
     A <= test_array[i];
     B <= test_array[i+1];
   end
+  #20 $fclose(log_file_handler); $finish;
 end
 
 assign V_test = A_test*B_test;
@@ -134,10 +136,15 @@ end
 
 integer incorrect_results = 0;
 integer correct_results = 0;
+integer log_file_handler;
+initial log_file_handler = $fopen("D:/Studia_EiT/magisterskie/Semestr_I/Systemy_dedykowane_w_ukladach_programowalnych/Projekt_1/simulation_logs.txt", "w");
 
 // TODO: add saving logs to file
 always@(posedge res_check_clk)
 begin
+    //|---------------------------------------------------------------------------------------|
+    //|--------------------------------- PRINT LOGS ------------------------------------------|
+    //|---------------------------------------------------------------------------------------|
     $strobe("----------------------------------------------------------------------");
     if(result !== result_check) begin
         incorrect_results = incorrect_results + 1;
@@ -154,6 +161,26 @@ begin
     end
     $strobe("\nResults summary: \nCorrect: %d,\nIncorrect: %d\n", correct_results, incorrect_results);
     $strobe("----------------------------------------------------------------------");
+    
+    
+    //|---------------------------------------------------------------------------------------|
+    //|--------------------------------- WRITE LOGS TO FILE  ---------------------------------|
+    //|---------------------------------------------------------------------------------------|
+    $fwrite(log_file_handler, "----------------------------------------------------------------------\n");
+    if(result !== result_check) begin
+        $fwrite(log_file_handler,"time: %0t\n", $time);
+        $fwrite(log_file_handler,"INCORRECT RESULT!\nA=   %h, B=   %h \nA_tb=%h, B_tb=%h\n", A, B, A_tb, B_tb);
+        $fwrite(log_file_handler,"result : %h\n", result);
+        $fwrite(log_file_handler,"r_check: %h\n", result_check);
+    end else begin
+        $fwrite(log_file_handler,"time: %0t\n", $time);
+        $fwrite(log_file_handler,"CORRECT RESULT!\nA=   %h, B=   %h \nA_tb=%h, B_tb=%h\n", A, B, A_tb, B_tb);
+        $fwrite(log_file_handler,"result : %h\n", result);
+        $fwrite(log_file_handler,"r_check: %h\n", result_check);
+    end
+    $fwrite(log_file_handler, "\nResults summary: \nCorrect: %d,\nIncorrect: %d\n", correct_results, incorrect_results);
+    $fwrite(log_file_handler, "----------------------------------------------------------------------");
+    
 end
 
 endmodule
