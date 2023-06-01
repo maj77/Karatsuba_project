@@ -53,7 +53,7 @@ karatsuba karatsuba_i ( .clk(clk   ),
 // +--------------------------------------------+
 // |                 sandbox                    |
 // +--------------------------------------------+
-assign Aw_test = 33'h1c232c05f; // dobra kurwa bo to sie nie zgaddza z AH i AL, co do kurwy?
+assign Aw_test = 33'h1c232c05f;
 assign Bw_test = 33'h168b33228;
 assign W_test = Aw_test * Bw_test;
 
