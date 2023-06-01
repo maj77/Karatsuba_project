@@ -14,8 +14,8 @@ module V_block#( parameter IN_WIDTH  = 32,
               )( 
                  input                  clk,
                  input                  rst,
-                 input  [IN_WIDTH-1:0]  A,
-                 input  [IN_WIDTH-1:0]  B,
+                 input  [ IN_WIDTH-1:0] A,
+                 input  [ IN_WIDTH-1:0] B,
                  output [OUT_WIDTH-1:0] result
                 );
 
@@ -28,8 +28,8 @@ wire [  IN_WIDTH/2:0] B_sum;
 wire [  IN_WIDTH-1:0] U;
 wire [  IN_WIDTH-1:0] V;
 wire [  IN_WIDTH+1:0] W;
-reg  [  IN_WIDTH-1:0] Z; 
-
+wire [    IN_WIDTH:0] Z; 
+reg  [ OUT_WIDTH-1:0] res_r;
 
 always@(posedge clk)
 begin
@@ -42,30 +42,33 @@ end
 assign A_sum = AH_r + AL_r;    
 assign B_sum = BH_r + BL_r;
               
-mult_gen_0 mult_U_i (.clk(clk ),
+mult_gen_0 mult_U_i (//.CLK(clk ),
                      .A  (AH_r),
                      .B  (BH_r),
                      .P  (U   )
                     );
 
-mult_gen_0 mult_V_i (.clk(clk ),
+mult_gen_0 mult_V_i (//.CLK(clk ),
                      .A  (AL_r),
                      .B  (BL_r),
                      .P  (V   )
                     );
                     
 //assign W_temp = A_sum * B_sum;
-mult_17b mult_W_i (.clk(clk  ),
+mult_17b mult_W_i (//.CLK(clk  ),
                    .A  (A_sum),
                    .B  (B_sum),
                    .P  (W    )
                    );
 
+
+assign Z = W - U - V;
+
 always@*
 begin
-  Z = W - U - V;
+  res_r = (U<<32) + (Z<<16) + V;    
 end
 
-assign result = (U<<32) + (Z<<16) + V;
+assign result = res_r;
 
 endmodule
