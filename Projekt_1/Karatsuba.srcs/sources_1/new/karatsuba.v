@@ -49,17 +49,17 @@ wire [  IN_WIDTH/2:0] B_sum;  // dodatkowy bit bo suma
 // ----output values----
 wire [  IN_WIDTH-1:0] U;
 wire [  IN_WIDTH-1:0] V;
-wire [  IN_WIDTH-1:0] W;
-reg  [  IN_WIDTH-1:0] Z;
+wire [    IN_WIDTH:0] W; //64
+wire [    IN_WIDTH:0] Z;
 wire [  IN_WIDTH-1:0] Z_abs;
-wire [ OUT_WIDTH-1:0] result;
+reg  [ OUT_WIDTH-1:0] result;
 
 
 
 always@*
 begin
-  A_r <= A_i;
-  B_r <= B_i;
+  A_r = A_i;
+  B_r = B_i;
 end
 
 assign AH = A_r[IN_WIDTH-1:IN_WIDTH/2];
@@ -93,12 +93,16 @@ W_block w_i ( .clk   (clk  ),
               .A     (A_sum),
               .B     (B_sum),
               .result(W    ) );
-      
-always@*
-begin
-  Z = W - U - V;
-end
 
-assign C_o = (U<<64) + (Z<<32) + V;
+//assign W = A_sum * B_sum;      
+
+
+assign Z = W - U - V;
+
+always@(posedge clk)
+begin
+  result <= (U<<64) + (Z<<32) + V;
+end
+assign C_o = result;
 
 endmodule
