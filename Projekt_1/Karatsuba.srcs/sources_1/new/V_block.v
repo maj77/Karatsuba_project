@@ -16,7 +16,9 @@ module V_block#( parameter IN_WIDTH  = 32,
                  input                  rst,
                  input  [ IN_WIDTH-1:0] A,
                  input  [ IN_WIDTH-1:0] B,
-                 output [OUT_WIDTH-1:0] result
+                 input                  vld_in,
+                 output [OUT_WIDTH-1:0] result,
+                 output                 vld_out 
                 );
 
 reg  [IN_WIDTH/2-1:0] AH_r;
@@ -30,6 +32,7 @@ wire [  IN_WIDTH-1:0] V;
 wire [  IN_WIDTH+1:0] W;
 wire [    IN_WIDTH:0] Z; 
 reg  [ OUT_WIDTH-1:0] res_r;
+reg                   vld;
 
 
 always@(posedge clk)
@@ -38,8 +41,10 @@ begin
   AL_r <= A[       IN_WIDTH/2-1:0];
   BH_r <= B[IN_WIDTH-1:IN_WIDTH/2];
   BL_r <= B[       IN_WIDTH/2-1:0];
+  vld  <= vld_in;
 end
- 
+assign vld_out = vld;
+
 assign A_sum = AH_r + AL_r;    
 assign B_sum = BH_r + BL_r;
               

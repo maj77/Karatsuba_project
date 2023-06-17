@@ -27,6 +27,8 @@ localparam TESTS_COUNT = 500;
 reg          clk;
 reg          res_check_clk;
 reg          rst;
+reg          din_vld;
+wire         dout_vld;
 reg  [63:0]  A, A_tb;
 reg  [63:0]  B, B_tb;
 wire [127:0] result;
@@ -45,17 +47,18 @@ wire [34:0] wb_z;
 wire [34:0] wb_w; 
 wire [67:0] wb_res;
 
-
-karatsuba karatsuba_i ( .clk(clk   ),
-                        .rst(rst   ),
-                        .A_i(A     ),
-                        .B_i(B     ),
-                        .C_o(result) );
+karatsuba karatsuba_i ( .clk       (clk     ),
+                        .rst       (rst     ),
+                        .A_i       (A       ),
+                        .B_i       (B       ),
+                        .data_vld_i(din_vld ),
+                        .C_o       (result  ),
+                        .data_vld_o(dout_vld) );
 
 // +--------------------------------------------+
 // |                 sandbox                    |
 // +--------------------------------------------+
-assign Aw_test = 33'h1c232c05f; 
+assign Aw_test = 33'h1c232c05f;
 assign Bw_test = 33'h168b33228;
 assign W_test = Aw_test * Bw_test;
 
@@ -126,7 +129,7 @@ initial
 // +--------------------------------------------+
 // |            Apply TV to input               |
 // +--------------------------------------------+
-`define TV_ON
+//`define TV_ON
 
 integer i;
 initial
@@ -134,13 +137,15 @@ begin
 `ifdef TV_ON
   for(i=0; i<TESTS_COUNT; i=i+2) begin
     #20
-    A = test_array[i];
-    B = test_array[i+1];
+    A       = test_array[i];
+    B       = test_array[i+1];
+    din_vld = 1'b1;
     $strobe("i = %d", i);
   end
 `else
-    A = 64'hd8089c97ea2a23c8;
-    B = 64'h9b95f2fbcd1d3f2d;
+    A = 64'd35452834763297432;
+    B = 64'd34124121129405913;
+    din_vld = 1'b1;
     #60
 `endif
   #20 $fclose(log_file_handler); $finish;
@@ -160,8 +165,8 @@ end
 always@(posedge clk)
 begin
     result_check_buf <= A_tb*B_tb;
-    //result_check_buf2 <= result_check_buf;
-    result_check      <= result_check_buf; 
+    result_check_buf2 <= result_check_buf;
+    result_check      <= result_check_buf2; 
 end
 
 integer incorrect_results = 0;
