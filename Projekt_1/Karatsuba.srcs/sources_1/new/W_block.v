@@ -16,7 +16,9 @@ module W_block#( parameter IN_WIDTH  = 33, // + one padding bit which is not inc
                  input                  rst,
                  input  [ IN_WIDTH-1:0] A, //[32:0]
                  input  [ IN_WIDTH-1:0] B,
-                 output [OUT_WIDTH-1:0] result 
+                 input                  vld_in,
+                 output [OUT_WIDTH-1:0] result,
+                 output                 vld_out 
                );
 // module performs 33b*33b multiplication, but inside it's implemented as 34*34b so shifts are power of 2
 reg  [  IN_WIDTH/2:0] AH_r; //[16:0]
@@ -30,7 +32,7 @@ wire [    IN_WIDTH:0] V; //[33:0]
 wire [  IN_WIDTH+1:0] W; //[34:0]
 wire [  IN_WIDTH+1:0] Z; //[34:0]
 reg  [ OUT_WIDTH-1:0] res_r;
-
+reg                   vld;
 
 always@(posedge clk)
 begin
@@ -38,7 +40,9 @@ begin
   AL_r <= A[           IN_WIDTH/2:0];
   BH_r <= B[IN_WIDTH-1:IN_WIDTH/2+1];
   BL_r <= B[           IN_WIDTH/2:0];
+  vld  <= vld_in;
 end
+assign vld_out = vld;
 
 assign A_sum = AH_r + AL_r;
 assign B_sum = BH_r + BL_r;

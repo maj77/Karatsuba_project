@@ -27,12 +27,12 @@ module karatsuba#( parameter IN_WIDTH = 64,
                    input                  rst,
                    input  [ IN_WIDTH-1:0] A_i,
                    input  [ IN_WIDTH-1:0] B_i,
-                   output [OUT_WIDTH-1:0] C_o 
+                   input                  data_vld_i,
+                   output [OUT_WIDTH-1:0] C_o,
+                   output                 data_vld_o
                   );
 
 
-//TODO: zrobiæ mniej sygna³ów ale szersze, np zamiast AAH, AAL zrobic jeden sygnal i w submodule to rozdzielic
-//      wydaje mi sie ze bedzie to latwiejsze w debugowaniu
 // ----------internal signals---------------
 // ----input values----
 reg [   IN_WIDTH-1:0] A_r;
@@ -44,7 +44,7 @@ wire [IN_WIDTH/2-1:0] AL;
 wire [IN_WIDTH/2-1:0] BH;
 wire [IN_WIDTH/2-1:0] BL;
 wire [  IN_WIDTH/2:0] A_sum;
-wire [  IN_WIDTH/2:0] B_sum;  // dodatkowy bit bo suma
+wire [  IN_WIDTH/2:0] B_sum;
 
 // ----output values----
 wire [  IN_WIDTH-1:0] U;
@@ -53,13 +53,17 @@ wire [    IN_WIDTH:0] W; //64
 wire [    IN_WIDTH:0] Z;
 wire [  IN_WIDTH-1:0] Z_abs;
 reg  [ OUT_WIDTH-1:0] result;
+reg  [           2:0] din_vld_r;
+reg  [           2:0] dout_vld_r;
+wire [           2:0] dout_vld;
 
-
-
-always@*
+always@(posedge clk) // consider register here
 begin
-  A_r = A_i;
-  B_r = B_i;
+  if (data_vld_i) begin
+    A_r       <= A_i;
+    B_r       <= B_i;
+    din_vld_r <= {3{data_vld_i}};
+  end
 end
 
 assign AH = A_r[IN_WIDTH-1:IN_WIDTH/2];
@@ -72,35 +76,46 @@ assign B_sum = BH + BL;
               
 
 // U and V blocks take 32bit input values,
-// W block take 33 bit input value
+// W block takes 33 bit input value
 // A_H * B_H
-U_block u_i ( .clk   (clk),
-              .rst   (rst),
-              .A     (AH ),
-              .B     (BH ),
-              .result(U  )  );
+U_block u_i ( .clk    (clk         ),
+              .rst    (rst         ),
+              .A      (AH          ),
+              .B      (BH          ),
+              .vld_in (din_vld_r[0]),
+              .result (U           ),
+              .vld_out(dout_vld[0] )  
+             );
               
 // A_L * B_L
-V_block v_i ( .clk   (clk),
-              .rst   (rst),
-              .A     (AL ),
-              .B     (BL ),
-              .result(V  )   );
+V_block v_i ( .clk    (clk         ),
+              .rst    (rst         ),
+              .A      (AL          ),
+              .B      (BL          ),
+              .vld_in (din_vld_r[1]),
+              .result (V           ),
+              .vld_out(dout_vld[1] )   
+             );
 
 //(A_H + A_L) * (B_H + B_L)
-W_block w_i ( .clk   (clk  ),
-              .rst   (rst  ),
-              .A     (A_sum),
-              .B     (B_sum),
-              .result(W    ) );
-//assign W = A_sum * B_sum;      
+W_block w_i ( .clk    (clk         ),
+              .rst    (rst         ),
+              .A      (A_sum       ),
+              .B      (B_sum       ),
+              .vld_in (din_vld_r[2]),
+              .result (W           ),
+              .vld_out(dout_vld[2] )
+             );
 
 assign Z = W - U - V;
 
 always@(posedge clk)
 begin
-  result <= (U<<64) + (Z<<32) + V;
+  result     <= (U<<64) + (Z<<32) + V;
+  dout_vld_r <= dout_vld;
 end
-assign C_o = result;
+
+assign C_o        = result;
+assign data_vld_o = &dout_vld_r;
 
 endmodule
