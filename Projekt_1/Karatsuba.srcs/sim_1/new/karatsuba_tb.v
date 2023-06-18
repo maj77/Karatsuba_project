@@ -143,9 +143,13 @@ begin
     $strobe("i = %d", i);
   end
 `else
+    din_vld = 1'b0;
+    #20
     A = 64'd35452834763297432;
     B = 64'd34124121129405913;
     din_vld = 1'b1;
+    #5
+    din_vld = 1'b0;
     #60
 `endif
   #20 $fclose(log_file_handler); $finish;
@@ -165,7 +169,7 @@ end
 always@(posedge clk)
 begin
     result_check_buf <= A_tb*B_tb;
-    result_check_buf2 <= result_check_buf;
+    result_check_buf2 <= result_check_buf;// + 128'h00000002000000000000001000000000;
     result_check      <= result_check_buf2; 
 end
 

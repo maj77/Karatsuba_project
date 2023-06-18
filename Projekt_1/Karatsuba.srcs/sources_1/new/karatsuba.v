@@ -62,7 +62,9 @@ begin
   if (data_vld_i) begin
     A_r       <= A_i;
     B_r       <= B_i;
-    din_vld_r <= {3{data_vld_i}};
+    din_vld_r <= 3'b111; //{3{data_vld_i}};
+  end else begin
+    din_vld_r <= 3'b000;
   end
 end
 
