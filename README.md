@@ -9,5 +9,6 @@ Project was implemented and run on Zybo board
 
 ---
 ## Python UART script demo
+
 _uart_com.py_ tests if system is working correctly by sending data to board and then comparing results
  ![image](https://github.com/maj77/Karatsuba_project/assets/38226349/9299ee81-8d94-4a7e-aa3a-115e4b4e4c85)
