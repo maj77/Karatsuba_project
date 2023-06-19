@@ -1,5 +1,5 @@
 # Karatsuba_project
-Hardware implementation of Karatsuba multiplication algorithm.
+Hardware implementation of Karatsuba multiplication algorithm
 ---
 Project consist of Karatsuba 64bit x 64bit multiplication algorithm implemented in Verilog, testbench, ARM processor which communicates with Karatsuba IP over AXI Lite interface, python scripts used for generating test values and communication with board over uart.
 
